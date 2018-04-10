@@ -2,6 +2,6 @@
 
 Play classic snake game online! :snake:
 
-##TODO:
+## TODO:
 - [x] Desktop Version 
 - [ ] Mobile Version
