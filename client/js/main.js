@@ -4,8 +4,8 @@ const Canvas = (function() {
 
   // Variables
   var config = {
-    canvasWidth: 1160,
-    canvasHeight: 760,
+    canvasWidth: 1150,
+    canvasHeight: 750,
     canvasBackground: '#000'
   };
 
@@ -32,6 +32,7 @@ const Canvas = (function() {
     ctx.fillStyle = color;
     ctx.fillRect(x, y, size, size);
     // TODO nicks
+
   };
 
   var clear = function({
@@ -54,17 +55,51 @@ const Canvas = (function() {
 
 const Socket = (function() {
 
-  let url = "http://localhost:4000/";
-  var socket = io(url);
+  var $connectBTN = document.getElementById('connect');
+  var $nickInput = document.getElementById('nickname');
 
-  socket.emit('Join Game', {
-    nick: 'Lolekappa',
-    color: "#e6e6e6"
-  });
+  var url = "http://localhost:4000/";
+  var socket = io(url);
+  var connected = false;
+
 
   // Functions
   var changeDirection = function(direction) {
     return socket.emit('Change Direction', direction);
+  };
+
+  var gameLost = function() {
+    alert('You lost!');
+    disconnect();
+  };
+
+  var connect = function() {
+    if ($nickInput.value.length < 1) {
+      alert('You have to set your nickname!');
+      return false;
+    }
+    $connectBTN.innerHTML = 'Disconnect';
+    $nickInput.classList.add('hidden');
+    socket.emit('Join Game', {
+      nick: $nickInput.value,
+      color: getRandomColor()
+    });
+    connected = true;
+  };
+
+  var disconnect = function() {
+    $connectBTN.innerHTML = 'Connect';
+    $nickInput.classList.remove('hidden');
+    socket.emit('Leave Game');
+    connected = false;
+  };
+
+  var toggleConnection = function() {
+    if (connected) {
+      disconnect();
+    } else {
+      connect();
+    }
   };
 
   // Listeners
@@ -74,6 +109,8 @@ const Socket = (function() {
   socket.on('Fruit Created', renderFruit);
   socket.on('Update Points', renderPoints);
   socket.on('Player Left', removeSnake);
+  socket.on('Game Lost', gameLost);
+  $connectBTN.addEventListener('click', toggleConnection);
 
   return {
     changeDirection
@@ -154,8 +191,29 @@ function removeSnake(data) {
 }
 
 function renderPoints(data) {
-  console.log(data);
+  let $scores = document.getElementById('scores');
+  let html = '';
+  for (let snake of data) {
+    html += `<li class="scoreboard__player">
+      <span class="scoreboard__player--nick">${snake.nick}: </span>
+      <span class="scoreboard__player--points">${snake.points}</span>
+    </li>`;
+  }
+  $scores.innerHTML = html;
 }
 
-Canvas.setSize();
-Canvas.setBackground();
+function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+function init() {
+  Canvas.setSize();
+  Canvas.setBackground();
+}
+
+init();

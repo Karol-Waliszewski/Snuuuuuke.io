@@ -1,8 +1,8 @@
 var OPTIONS = {
   SnakeSize: 20,
   Canvas: {
-    width: 1160,
-    height: 760
+    width: 1150,
+    height: 750
   }
 };
 

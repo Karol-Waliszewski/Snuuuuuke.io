@@ -28,8 +28,10 @@ const FindSnake = function(id) {
   let searchedSnake = snakes.find(function(snake) {
     return snake.id == id;
   });
-  if (searchedSnake) return searchedSnake;
-  else return false;
+  if (searchedSnake)
+    return searchedSnake;
+  else
+    return false;
 };
 
 const updatePlayers = function() {
@@ -102,7 +104,7 @@ const checkObjectsCollison = function() {
             }
           }
         } else if (snake.id == player.id) {
-          for (let i = 11 + snake.speed; i < snake.tail.length; i++) {
+          for (let i = 3 + snake.speed; i < snake.tail.length; i++) {
             if (checkColision(player, snake.tail[i])) {
               lostFlag = true;
               break;
@@ -148,14 +150,14 @@ function LoadFruits(id) {
   io.to(id).emit('Load Fruits', fruits);
 }
 
-const leaveGame = function(id) {
+function leaveGame(id) {
   let snake = FindSnake(id);
   if (snake) {
     snakes.splice(snakes.indexOf(snake), 1);
   }
   updatePoints();
   io.to('Game Room').emit('Player Left', snake);
-};
+}
 
 // SOCKET.IO
 io.on('connection', function(socket) {
@@ -169,11 +171,13 @@ io.on('connection', function(socket) {
     leaveGame(socket.id);
   });
 
+  // Joining to game room
+  socket.join('Game Room');
+
   // Join Game
   socket.on('Join Game', function(data) {
 
-    // Joining to game room
-    socket.join('Game Room');
+    console.log(`Joined Game: ${socket.id}`);
 
     // Creates new Snake
     let snake = new Snake({
@@ -207,8 +211,8 @@ io.on('connection', function(socket) {
 
 });
 
-// ----------- UPDATE ------------ //
+// ----------- UPDATE ------------
 setInterval(updatePlayers, 1000 / 30);
 
-// ----------- FRUITS ------------ //
+// ----------- FRUITS ------------
 createFruit();
