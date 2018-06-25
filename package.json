@@ -1,0 +1,14 @@
+{
+  "name": "snuuuuke.io-client",
+  "version": "1.0.0",
+  "description": "play classic snake with your friends!",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Karol Waliszewski",
+  "license": "ISC",
+  "dependencies": {
+    "socket.io": "^2.1.0"
+  }
+}
