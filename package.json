@@ -1,0 +1,17 @@
+{
+  "name": "snuuuuke.io",
+  "version": "1.0.0",
+  "description": "play classic snake with your friends!",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Karol Waliszewski",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.3",
+    "express-vue": "^5.6.6",
+    "lodash": "^4.17.10",
+    "socket.io": "^2.1.0"
+  }
+}
